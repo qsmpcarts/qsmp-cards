@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QSMP // FEDERATION ARCHIVE</title>
+  <title>QSMP // FEDERATION ARCHIVE & PACKS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -114,29 +114,41 @@
       color: var(--text-muted);
     }
 
-    .sys-status {
-      font-size: 0.8rem;
-      padding: 0.4rem 0.8rem;
-      border: 1px solid var(--border-color);
-      background: var(--bg-panel);
+    /* NAWIGACJA ZAKŁADEK (LIBRARY / OPEN) */
+    .nav-tabs {
       display: flex;
-      align-items: center;
       gap: 0.5rem;
     }
 
-    .blink-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      animation: blink 1.5s infinite;
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.6rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
     }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--accent-blue);
+      color: var(--bg-dark);
+      border-color: var(--accent-blue);
+      font-weight: 700;
     }
 
+    /* GŁÓWNE SEKCJE WIDOKU */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active-view {
+      display: block;
+    }
+
+    /* KONTROLESY (FILTRY / WYSZUKIWARKA) */
     .controls {
       max-width: 1300px;
       margin: 2rem auto 1.5rem;
@@ -205,6 +217,7 @@
       font-weight: 700;
     }
 
+    /* SIATKA KART */
     .grid {
       max-width: 1300px;
       margin: 0 auto 4rem;
@@ -365,6 +378,63 @@
       opacity: 0.6;
     }
 
+    /* SEKCJA OTWIERANIA PACZEK (OPEN) */
+    .pack-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      text-align: center;
+      padding: 0 2rem;
+    }
+
+    .pack-box {
+      background: var(--bg-card);
+      border: 2px dashed var(--accent-blue);
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .pack-box:hover {
+      border-color: var(--text-main);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+    }
+
+    .pack-title {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent-blue);
+    }
+
+    .open-btn {
+      background: var(--accent-blue);
+      color: var(--bg-dark);
+      border: none;
+      padding: 1rem 2.5rem;
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .open-btn:hover {
+      background: var(--text-main);
+      transform: scale(1.05);
+    }
+
+    /* WYNIK LOSOWANIA PACZKI */
+    .drop-result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -454,31 +524,46 @@
       <div class="brand">
         <div class="fed-logo">F</div>
         <div>
-          <h1>QSMP // FEDERATION ARCHIVE</h1>
-          <div class="subtitle">ISLAND SURVEILLANCE DATABASE // CLEARANCE LEVEL 4</div>
+          <h1>QSMP // ARCHIVE</h1>
+          <div class="subtitle">SECURITY CLEARANCE LEVEL 4</div>
         </div>
       </div>
-      <div class="sys-status">
-        <div class="blink-dot"></div>
-        <span>SYSTEM ONLINE // FILES: <strong id="card-count">0</strong></span>
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchView('library')">📚 BIBLIOTEKA</button>
+        <button class="tab-btn" onclick="switchView('open')">📦 OTWÓRZ PACZKĘ</button>
       </div>
     </div>
   </header>
 
-  <section class="controls">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="SEARCH_SUBJECT_OR_EGG...">
-    </div>
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">WSZYSTKIE</button>
-      <button class="filter-btn" data-filter="resident">MIESZKAŃCY</button>
-      <button class="filter-btn" data-filter="egg">JAJA (EGGS)</button>
-      <button class="filter-btn" data-filter="federation">FEDERACJA</button>
-    </div>
-  </section>
+  <!-- WIDOK 1: BIBLIOTEKA (WSZYSTKIE KARTY) -->
+  <div id="libraryView" class="view-section active-view">
+    <section class="controls">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="SEARCH_SUBJECT...">
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">WSZYSTKIE</button>
+        <button class="filter-btn" data-filter="resident">MIESZKAŃCY</button>
+        <button class="filter-btn" data-filter="egg">JAJA (EGGS)</button>
+        <button class="filter-btn" data-filter="federation">FEDERACJA</button>
+      </div>
+    </section>
+    <main class="grid" id="cardsGrid"></main>
+  </div>
 
-  <main class="grid" id="cardsGrid"></main>
+  <!-- WIDOK 2: OTWIERANIE PACZEK -->
+  <div id="openView" class="view-section">
+    <div class="pack-container">
+      <div class="pack-box">
+        <h2 class="pack-title">FEDERATION SUPPLY PACK</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Zawiera losowe akta pracowników, rezydentów oraz jednostek specjalnych wyspy.</p>
+        <button class="open-btn" onclick="openPack()">ODTWÓRZ PACZKĘ</button>
+      </div>
+      <div class="drop-result" id="dropResult"></div>
+    </div>
+  </div>
 
+  <!-- MODAL SZCZEGÓŁÓW -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
       <button class="close-modal" id="closeModal">[X] ZAMKNIJ</button>
@@ -587,11 +672,25 @@
       }
     ];
 
+    // Przełączanie widoków (Zakładki)
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'library') {
+        document.getElementById('libraryView').classList.add('active-view');
+        event.currentTarget.classList.add('active');
+        renderCards();
+      } else {
+        document.getElementById('openView').classList.add('active-view');
+        event.currentTarget.classList.add('active');
+      }
+    }
+
+    // Renderowanie biblioteki kart
     const grid = document.getElementById('cardsGrid');
     const searchInput = document.getElementById('searchInput');
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const cardCount = document.getElementById('card-count');
-
     let currentFilter = 'all';
 
     function renderCards() {
@@ -607,58 +706,69 @@
         return matchesFilter && matchesSearch;
       });
 
-      cardCount.textContent = filtered.length;
-
       filtered.forEach(card => {
-        const el = document.createElement('article');
-        el.className = 'card';
-        el.innerHTML = `
-          <div class="card-glare"></div>
-          <div>
-            <div class="card-header">
-              <span>${card.id}</span>
-              <span class="status-badge ${card.statusClass}">${card.status}</span>
-            </div>
-            <div class="card-image-wrap">
-              <img src="${card.image}" alt="${card.name}" loading="lazy">
-              <div class="stamp ${card.stampClass}">${card.stamp}</div>
-            </div>
-            <h2 class="card-title">${card.name}</h2>
-            <div class="card-meta">
-              <span class="lang-badge">${card.lang}</span>
-              <span>CAT: ${card.category.toUpperCase()}</span>
-            </div>
-            <p class="card-desc">${card.shortDesc}</p>
-          </div>
-          <div class="card-footer">
-            <span>CLICK TO DECRYPT</span>
-            <span class="barcode">|| | ||| | ||</span>
-          </div>
-        `;
-
-        el.addEventListener('mousemove', (e) => {
-          const rect = el.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          
-          const rotateX = ((y - centerY) / centerY) * -7;
-          const rotateY = ((x - centerX) / centerX) * 7;
-
-          el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-          const glare = el.querySelector('.card-glare');
-          glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.12), transparent 65%)`;
-        });
-
-        el.addEventListener('mouseleave', () => {
-          el.style.transform = 'rotateX(0) rotateY(0) scale(1)';
-        });
-
-        el.addEventListener('click', () => openModal(card));
-
-        grid.appendChild(el);
+        grid.appendChild(createCardElement(card));
       });
+    }
+
+    function createCardElement(card) {
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="card-glare"></div>
+        <div>
+          <div class="card-header">
+            <span>${card.id}</span>
+            <span class="status-badge ${card.statusClass}">${card.status}</span>
+          </div>
+          <div class="card-image-wrap">
+            <img src="${card.image}" alt="${card.name}" loading="lazy">
+            <div class="stamp ${card.stampClass}">${card.stamp}</div>
+          </div>
+          <h2 class="card-title">${card.name}</h2>
+          <div class="card-meta">
+            <span class="lang-badge">${card.lang}</span>
+            <span>CAT: ${card.category.toUpperCase()}</span>
+          </div>
+          <p class="card-desc">${card.shortDesc}</p>
+        </div>
+        <div class="card-footer">
+          <span>CLICK TO DECRYPT</span>
+          <span class="barcode">|| | ||| | ||</span>
+        </div>
+      `;
+
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -7;
+        const rotateY = ((x - centerX) / centerX) * 7;
+        el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        const glare = el.querySelector('.card-glare');
+        glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.12), transparent 65%)`;
+      });
+
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+      });
+
+      el.addEventListener('click', () => openModal(card));
+      return el;
+    }
+
+    // Losowanie paczki
+    function openPack() {
+      const resultContainer = document.getElementById('dropResult');
+      resultContainer.innerHTML = '';
+
+      // Losujemy 3 karty z naszej bazy
+      for (let i = 0; i < 3; i++) {
+        const randomCard = cardsData[Math.floor(Math.random() * cardsData.length)];
+        resultContainer.appendChild(createCardElement(randomCard));
+      }
     }
 
     filterBtns.forEach(btn => {
@@ -672,6 +782,7 @@
 
     searchInput.addEventListener('input', renderCards);
 
+    // Modal
     const modalOverlay = document.getElementById('modalOverlay');
     const closeModal = document.getElementById('closeModal');
 
