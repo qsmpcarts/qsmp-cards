@@ -40,7 +40,6 @@
       overflow-x: hidden;
     }
 
-    /* Efekt linii skanowania CRT */
     body::after {
       content: "";
       position: fixed;
@@ -56,7 +55,6 @@
       z-index: 999;
     }
 
-    /* NAGŁÓWEK TERMINALA */
     header {
       border-bottom: 1px solid var(--border-color);
       background: rgba(9, 10, 12, 0.9);
@@ -139,7 +137,6 @@
       50% { opacity: 0.2; }
     }
 
-    /* PASEK NARZĘDZI I FILTRÓW */
     .controls {
       max-width: 1300px;
       margin: 2rem auto 1.5rem;
@@ -208,7 +205,6 @@
       font-weight: 700;
     }
 
-    /* SIATKA KART */
     .grid {
       max-width: 1300px;
       margin: 0 auto 4rem;
@@ -219,7 +215,6 @@
       perspective: 1000px;
     }
 
-    /* POJEDYNCZA KARTA */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -282,18 +277,21 @@
       border: 1px solid var(--border-color);
       overflow: hidden;
       margin-bottom: 0.85rem;
+      display: grid;
+      place-items: center;
     }
 
     .card-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: contrast(1.08) saturate(0.95);
+      width: 75%;
+      height: 75%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: contrast(1.05);
       transition: transform 0.3s ease;
     }
 
     .card:hover .card-image-wrap img {
-      transform: scale(1.04);
+      transform: scale(1.06);
     }
 
     .stamp {
@@ -302,7 +300,7 @@
       right: 10px;
       border: 2px solid var(--accent-red);
       color: var(--accent-red);
-      background: rgba(9, 10, 12, 0.8);
+      background: rgba(9, 10, 12, 0.85);
       padding: 2px 8px;
       font-size: 0.7rem;
       font-weight: 700;
@@ -367,7 +365,6 @@
       opacity: 0.6;
     }
 
-    /* OKNO MODALNE */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -430,7 +427,9 @@
     .modal-img {
       width: 100%;
       aspect-ratio: 1 / 1;
-      object-fit: cover;
+      object-fit: contain;
+      image-rendering: pixelated;
+      background: #0d0f12;
       border: 1px solid var(--border-color);
     }
 
@@ -480,7 +479,6 @@
 
   <main class="grid" id="cardsGrid"></main>
 
-  <!-- OKNO MODALNE -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
       <button class="close-modal" id="closeModal">[X] ZAMKNIJ</button>
@@ -502,9 +500,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // BAZA DANYCH KART (Zawiera polską ekipę)
-    // ==========================================
     const cardsData = [
       {
         id: "FILE // #050",
@@ -516,7 +511,7 @@
         stamp: "MONITORED",
         stampClass: "",
         relation: "Polska Sekcja QSMP",
-        image: "https://placehold.co/400x420/14161a/ffffff?text=EWRON",
+        image: "ewron.jpeg",
         shortDesc: "Przedstawiciel polskiej społeczności na wyspie. Znany z niespożytej energii i budowania baz.",
         fullDesc: "Aktywny uczestnik wydarzeń na QSMP. Wprowadził polską energię i kulturę w struktury wyspy, angażując się w projekty budowlane oraz interakcje z innymi międzynarodowymi mieszkańcami."
       },
@@ -530,7 +525,7 @@
         stamp: "OBSERVED",
         stampClass: "",
         relation: "Polska Sekcja QSMP",
-        image: "https://placehold.co/400x420/14161a/ffffff?text=GRAF",
+        image: "graf.jpeg",
         shortDesc: "Członek polskiej ekipy, ostrożny analityk i budowniczy.",
         fullDesc: "Przezornie podchodzi do tajemnic Federacji. Skupiony na przetrwaniu, rozwoju technologicznym i wspieraniu polskiej grupy na serwerze."
       },
@@ -544,7 +539,7 @@
         stamp: "REGISTERED",
         stampClass: "",
         relation: "Polska Sekcja QSMP",
-        image: "https://placehold.co/400x420/14161a/ffffff?text=NEXE",
+        image: "nexe.jpeg",
         shortDesc: "Ekspert od technicznych aspektów gry i eksploracji wyspy.",
         fullDesc: "Jeden z filarów polskiej grupy na serwerze QSMP. Cechuje się doskonałą znajomością mechanik gry oraz kreatywnym podejściem do przetrwania w niebezpiecznym środowisku."
       },
@@ -558,7 +553,7 @@
         stamp: "VERIFIED",
         stampClass: "",
         relation: "Polska Sekcja QSMP",
-        image: "https://placehold.co/400x420/14161a/ffffff?text=MULTI",
+        image: "youngmulti.jpeg",
         shortDesc: "Weteran polskiej sceny gamingowej, obecnie stawiający czoła zagrożeniom QSMP.",
         fullDesc: "Wniósł na wyspę duże doświadczenie z serwerów przetrwania. Szybko odnalazł się w dynamice panującej między międzynarodowymi graczami a Federacją."
       },
